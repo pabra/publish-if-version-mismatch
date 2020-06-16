@@ -40,13 +40,29 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node }}-
             ${{ runner.os }}-node-
 
-      - name: debug event
+      - name: debug sha
         run: |
-          echo "event: ${{ toJson(github.event) }}"
+          echo "sha: ${{ sha }}"
+
+      - name: debug ref
+        run: |
+          echo "ref: ${{ ref }}"
+
+      - name: debug event_name
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+
+      - name: debug event_path
+        run: |
+          echo "event_path: ${{ github.event_path }}"
 
       - name: debug matrix
         run: |
           echo "matrix: ${{ toJson(matrix) }}"
+
+      - name: debug event
+        run: |
+          echo "event: ${{ toJson(github.event) }}"
 
       - run: npm ci
       - run: npm run format:check
