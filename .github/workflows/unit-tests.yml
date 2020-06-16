@@ -42,7 +42,7 @@ jobs:
 
       - name: debug event
         run: |
-          echo "event: ${{ toJson(github).event }}"
+          echo "event: ${{ toJson(github.event) }}"
 
       - name: debug matrix
         run: |
