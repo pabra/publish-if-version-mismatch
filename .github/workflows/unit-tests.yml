@@ -12,7 +12,7 @@ on:
       - '**.md'
 
 jobs:
-  build-dependency-cache:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
