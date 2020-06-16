@@ -9,6 +9,7 @@
     "dist"
   ],
   "scripts": {
+    "clean:node_modules": "rimraf 'node_modules/*' 'node_modules/.*'",
     "clean:coverage": "rimraf coverage/*",
     "clean:build": "rimraf dist/*",
     "clean:build:cjs": "rimraf dist/cjs/*",
