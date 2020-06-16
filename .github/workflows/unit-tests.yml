@@ -1,8 +1,6 @@
 name: toolkit-unit-tests
 on:
   push:
-    tags:
-      - 'v*'
     branches:
       - master
     paths-ignore:
@@ -21,17 +19,22 @@ jobs:
 
     name: ${{ matrix.os }} Node ${{ matrix.node }} cache
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        uses: actions/checkout@v2
+
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Get npm cache directory
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        name: Get npm cache directory
         id: npm-cache
         run: |
           echo "::set-output name=dir::$(npm config get cache)"
 
-      - uses: actions/cache@v2
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        uses: actions/cache@v2
         id: cache
         with:
           path: ${{ steps.npm-cache.outputs.dir }}
@@ -40,49 +43,7 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node }}-
             ${{ runner.os }}-node-
 
-      - name: debug sha
-        # sha: 6788d98361cb691e3c35c8e7dc03a2364cd315fc
-        run: |
-          echo "sha: ${{ github.sha }}"
-
-      - name: debug ref
-        # ref: refs/tags/v0.1.1
-        # ref: refs/tags/master
-        run: |
-          echo "ref: ${{ github.ref }}"
-
-      - name: debug event_name
-        # event_name: push
-        run: |
-          echo "event_name: ${{ github.event_name }}"
-
-      - name: debug event_path
-        # event_path: /home/runner/work/_temp/_github_workflow/event.json
-        run: |
-          echo "event_path: ${{ github.event_path }}"
-
-      - name: debug matrix
-        # matrix: {
-        #   os: ubuntu-latest,
-        #   node: 12
-        # }
-        run: |
-          echo "matrix: ${{ toJson(matrix) }}"
-
-      # - name: debug event
-      #   run: |
-      #     echo "event: ${{ toJson(github.event) }}"
-
-      - run: npm ci
-      - run: npm run format:check
-      - run: npm run lint
-      - run: npm run test:coverage
-      - run: npm run build:check
-
-      - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 12 }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-coverage
-          path: coverage/
-      # - if: ${{ matrix.os == ubuntu-latest && matrix.node == 12 && github.event_name == tags }}
-      #   run: npm publish
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        run: npm ci
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        run: npm run test:after-commit
