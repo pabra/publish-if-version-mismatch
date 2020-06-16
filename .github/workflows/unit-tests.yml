@@ -42,11 +42,11 @@ jobs:
 
       - name: debug event
         run: |
-          echo "event: ${{ github.event }}"
+          echo "event: ${{ toJson(github).event }}"
 
       - name: debug matrix
         run: |
-          echo "matrix: ${{ matrix }}"
+          echo "matrix: ${{ toJson(matrix) }}"
 
       - run: npm ci
       - run: npm run format:check
