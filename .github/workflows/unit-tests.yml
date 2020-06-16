@@ -40,9 +40,13 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node }}-
             ${{ runner.os }}-node-
 
-      - name: debug
+      - name: debug event
         run: |
-          echo "ebent: ${{ github.event }}"
+          echo "event: ${{ github.event }}"
+
+      - name: debug matrix
+        run: |
+          echo "matrix: ${{ matrix }}"
 
       - run: npm ci
       - run: npm run format:check
@@ -50,7 +54,7 @@ jobs:
       - run: npm run test:coverage
       - run: npm run build:check
 
-      - if: ${{ matrix.os == ubuntu-latest && matrix.node == 12 }}
+      - if: ${{ matrix.os == "ubuntu-latest" && matrix.node == 12 }}
         uses: actions/upload-artifact@v2
         with:
           name: test-coverage
