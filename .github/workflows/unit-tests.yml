@@ -42,11 +42,11 @@ jobs:
 
       - name: debug sha
         run: |
-          echo "sha: ${{ sha }}"
+          echo "sha: ${{ github.sha }}"
 
       - name: debug ref
         run: |
-          echo "ref: ${{ ref }}"
+          echo "ref: ${{ github.ref }}"
 
       - name: debug event_name
         run: |
