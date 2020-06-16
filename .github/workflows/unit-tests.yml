@@ -19,7 +19,7 @@ jobs:
         od: [macos-latest, windows-latest, ubuntu-latest]
         node: [10, 12, 14]
 
-    name: ${{ matric.os }} Node ${{ matrix.node }} cache
+    name: ${{ matrix.os }} Node ${{ matrix.node }} cache
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
