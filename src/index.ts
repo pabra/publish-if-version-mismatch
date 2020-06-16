@@ -48,7 +48,7 @@ const getPackageJson = (): Record<string, any> => {
 };
 
 // const ret = getVersionInRegistry('@pabra/tongue-common2', 'latest');
-const ret = getVersionInRegistry('publish-if-version-mismatch', 'latest');
-console.log('ret: %o', ret);
+// const ret = getVersionInRegistry('publish-if-version-mismatch', 'latest');
+// console.log('ret: %o', ret);
 
 export { getVersionInRegistry, getPackageJson };
