@@ -47,8 +47,30 @@ const getPackageJson = (): Record<string, any> => {
   return JSON.parse(readFileSync(path, 'utf-8'));
 };
 
+const shouldPublish = (
+  localVersion: string,
+  registryVersion: string | 404,
+): boolean => {
+  if (typeof localVersion !== 'string') {
+    throw new Error(
+      `localVersion must be 'string' not '${typeof localVersion}'`,
+    );
+  }
+
+  if (localVersion === '') {
+    throw new Error('localVersion cannot be empty');
+  }
+
+  if (typeof registryVersion !== 'string' && registryVersion !== 404) {
+    throw new Error(
+      `unexpected value for registryVersion: '${registryVersion}'`,
+    );
+  }
+
+  return localVersion !== registryVersion;
+};
 // const ret = getVersionInRegistry('@pabra/tongue-common2', 'latest');
 // const ret = getVersionInRegistry('publish-if-version-mismatch', 'latest');
 // console.log('ret: %o', ret);
 
-export { getVersionInRegistry, getPackageJson };
+export { getPackageJson, getVersionInRegistry, shouldPublish };
