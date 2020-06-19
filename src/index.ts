@@ -1,4 +1,4 @@
-import { spawnSync } from 'child_process';
+import spawn from 'cross-spawn';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -14,7 +14,7 @@ const getVersionInRegistry = (
     throw new Error(`tag must be 'string' not '${typeof tag}'`);
   }
 
-  const child = spawnSync(
+  const child = spawn.sync(
     'npm',
     ['--json', 'view', `${packageName}@${tag}`, 'version'],
     {
