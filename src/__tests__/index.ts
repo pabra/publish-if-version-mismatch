@@ -24,15 +24,30 @@ describe('version in registry', () => {
     );
   });
 
-  test('number version', () => {
+  test('empty tag', () => {
+    const latest = getVersionInRegistry(
+      'publish-if-version-mismatch',
+      'latest',
+    );
+    const empty = getVersionInRegistry('publish-if-version-mismatch', '');
+    expect(empty).toBe(latest);
+  });
+
+  test('number tag', () => {
     expect(() =>
       getVersionInRegistry('publish-if-version-mismatch', 0.1 as any),
     ).toThrowError();
   });
 
-  test('no version', () => {
+  test('no tag', () => {
     expect(() =>
       getVersionInRegistry('publish-if-version-mismatch', undefined as any),
+    ).toThrowError();
+  });
+
+  test('@ tag', () => {
+    expect(() =>
+      getVersionInRegistry('publish-if-version-mismatch', '@'),
     ).toThrowError();
   });
 
@@ -63,6 +78,10 @@ describe('version in registry', () => {
 
   test('number package', () => {
     expect(() => getVersionInRegistry(5 as any, 'latest')).toThrowError();
+  });
+
+  test('empty package', () => {
+    expect(() => getVersionInRegistry('', 'latest')).toThrowError();
   });
 
   test('no package', () => {
