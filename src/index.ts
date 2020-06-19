@@ -6,6 +6,14 @@ const getVersionInRegistry = (
   packageName: string,
   tag: string,
 ): string | 404 => {
+  if (typeof packageName !== 'string') {
+    throw new Error(`packageName must be 'string' not '${typeof packageName}'`);
+  }
+
+  if (typeof tag !== 'string') {
+    throw new Error(`tag must be 'string' not '${typeof tag}'`);
+  }
+
   const child = spawnSync(
     'npm',
     ['--json', 'view', `${packageName}@${tag}`, 'version'],
@@ -34,15 +42,14 @@ const getVersionInRegistry = (
   }
 
   if (typeof stdout !== 'string') {
-    console.log('typeof: %o', typeof stdout);
     throw new Error(`unexpected stdout: ${child.stdout}`);
   }
 
   return stdout;
 };
 
-const getPackageJson = (): Record<string, any> => {
-  const path = join(process.cwd(), 'package.json');
+const getPackageJson = (dir = process.cwd()): Record<string, any> => {
+  const path = join(dir, 'package.json');
 
   return JSON.parse(readFileSync(path, 'utf-8'));
 };
@@ -69,8 +76,5 @@ const shouldPublish = (
 
   return localVersion !== registryVersion;
 };
-// const ret = getVersionInRegistry('@pabra/tongue-common2', 'latest');
-// const ret = getVersionInRegistry('publish-if-version-mismatch', 'latest');
-// console.log('ret: %o', ret);
 
 export { getPackageJson, getVersionInRegistry, shouldPublish };
