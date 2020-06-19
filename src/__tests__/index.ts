@@ -2,27 +2,23 @@ import { join } from 'path';
 import { getPackageJson, getVersionInRegistry, shouldPublish } from '../index';
 
 describe('package.json', () => {
-  test('get own by cwd', () => {
-    expect(getPackageJson().name).toBe('publish-if-version-mismatch');
-  });
+  test('get own by cwd', () =>
+    expect(getPackageJson().name).toBe('publish-if-version-mismatch'));
 
-  test('get own two up', () => {
+  test('get own two up', () =>
     expect(getPackageJson(join(__dirname, '..', '..')).name).toBe(
       'publish-if-version-mismatch',
-    );
-  });
+    ));
 
-  test('nonexistent dir', () => {
-    expect(() => getPackageJson('/nonexistentDir')).toThrowError('ENOENT');
-  });
+  test('nonexistent dir', () =>
+    expect(() => getPackageJson('/nonexistentDir')).toThrowError('ENOENT'));
 });
 
 describe('version in registry', () => {
-  test('initial version', () => {
+  test('initial version', () =>
     expect(getVersionInRegistry('publish-if-version-mismatch', '0.1.0')).toBe(
       '0.1.0',
-    );
-  });
+    ));
 
   test('empty tag', () => {
     const latest = getVersionInRegistry(
@@ -33,23 +29,20 @@ describe('version in registry', () => {
     expect(empty).toBe(latest);
   });
 
-  test('number tag', () => {
+  test('number tag', () =>
     expect(() =>
       getVersionInRegistry('publish-if-version-mismatch', 0.1 as any),
-    ).toThrowError();
-  });
+    ).toThrowError());
 
-  test('no tag', () => {
+  test('no tag', () =>
     expect(() =>
       getVersionInRegistry('publish-if-version-mismatch', undefined as any),
-    ).toThrowError();
-  });
+    ).toThrowError());
 
-  test('@ tag', () => {
+  test('@ tag', () =>
     expect(() =>
       getVersionInRegistry('publish-if-version-mismatch', '@'),
-    ).toThrowError();
-  });
+    ).toThrowError());
 
   test('latest tag', () => {
     const latest = getVersionInRegistry(
@@ -61,40 +54,39 @@ describe('version in registry', () => {
     expect(latest).not.toBe('0.1.0');
   });
 
-  test('nonexistent tag', () => {
+  test('nonexistent tag', () =>
     expect(
       getVersionInRegistry(
         'publish-if-version-mismatch',
         'thisTagDoesNotExist',
       ),
-    ).toBe('');
-  });
+    ).toBe(''));
 
-  test('nonexistent package', () => {
+  test('nonexistent package', () =>
     expect(
       getVersionInRegistry('@pabra/thisPackageDoesNotExist', 'latest'),
-    ).toBe(404);
-  });
+    ).toBe(404));
 
-  test('number package', () => {
-    expect(() => getVersionInRegistry(5 as any, 'latest')).toThrowError();
-  });
+  test('number package', () =>
+    expect(() => getVersionInRegistry(5 as any, 'latest')).toThrowError());
 
-  test('empty package', () => {
-    expect(() => getVersionInRegistry('', 'latest')).toThrowError();
-  });
+  test('empty package', () =>
+    expect(() => getVersionInRegistry('', 'latest')).toThrowError());
 
-  test('no package', () => {
+  test('space package', () =>
+    expect(() =>
+      getVersionInRegistry('some package', 'latest'),
+    ).toThrowError());
+
+  test('no package', () =>
     expect(() =>
       getVersionInRegistry(undefined as any, 'latest'),
-    ).toThrowError();
-  });
+    ).toThrowError());
 
-  test('multiple version', () => {
+  test('multiple version', () =>
     expect(() =>
       getVersionInRegistry('publish-if-version-mismatch', '0.1'),
-    ).toThrowError();
-  });
+    ).toThrowError());
 });
 
 describe('should publish', () => {
