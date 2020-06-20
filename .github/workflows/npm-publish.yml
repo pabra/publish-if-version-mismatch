@@ -42,6 +42,7 @@ jobs:
 
       - run: npm run test:before-publish
 
-      - run: npm publish
+      # - run: npm publish
+      - run: node dist/cjs/cli.js
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
