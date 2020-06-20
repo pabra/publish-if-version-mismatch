@@ -2,21 +2,25 @@
 
 import arg from 'arg';
 import { basename, join } from 'path';
-import { getPackageJson } from './index';
+import {
+  getPackageJson,
+  getVersionInRegistry,
+  publish,
+  shouldPublish,
+} from './index';
 
 const args = arg({
   // Types
   '--help': Boolean,
   '--version': Boolean,
   '--tag': String,
+  '--dry-run': Boolean,
 
   // Aliases
   '-h': '--help',
   '-v': '--version',
   '-t': '--tag',
 });
-
-console.log('args:', args); // TODO: remove DEBUG
 
 const getOwnPackageJson = () => {
   try {
@@ -52,7 +56,7 @@ const showHelp = (stderr = false): void => {
     description,
     '',
     'USAGE:',
-    `    ${basename(process.argv[1])} [OPTIONS] PACKAGE_NAME`,
+    `    ${basename(process.argv[1])} [OPTIONS]`,
     '',
     'OPTIONS:',
     '    -h, --help',
@@ -64,9 +68,8 @@ const showHelp = (stderr = false): void => {
     '    -t, --tag=<TAG_NAME>',
     '        tag of the package to look for (default: latest)',
     '',
-    'ARGS:',
-    '    PACKAGE_NAME',
-    '        name of the package to look for',
+    '    --dry-run',
+    '        does not actually publish - reports details of what would have been published',
   ].join('\n');
 
   process[stderr ? 'stderr' : 'stdout'].write(`${help}\n`);
@@ -76,18 +79,31 @@ const showVersion = (): void => {
   process.stdout.write(`${getOwnVersionString()}\n`);
 };
 
-if (args['--help']) {
-  showHelp();
-} else if (args['--version']) {
-  showVersion();
-} else {
-  const packageName = args._[0];
+const main = async () => {
+  if (args['--help']) {
+    showHelp();
+  } else if (args['--version']) {
+    showVersion();
+  } else {
+    const dryRun = args['--dry-run'] ?? false;
+    const tag = args['--tag'] ?? 'latest';
+    const { name, version } = getPackageJson(process.cwd());
 
-  if (!packageName) {
-    process.stderr.write('missing PACKAGE_NAME\n\n');
-    showHelp(true);
-    throw new Error();
+    if (!name) {
+      throw new Error('could not get name from package.json');
+    }
+
+    if (!version) {
+      throw new Error('could not get version from package.json');
+    }
+
+    const registryVersion = getVersionInRegistry(name, tag);
+    const doPublish = shouldPublish(version, registryVersion);
+
+    if (doPublish) {
+      process.exitCode = await publish(tag, dryRun);
+    }
   }
+};
 
-  // const tag = args['--tag'] ?? 'latest';
-}
+main();

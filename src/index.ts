@@ -48,7 +48,30 @@ const getVersionInRegistry = (
   return stdout;
 };
 
-const getPackageJson = (dir = process.cwd()): Record<string, any> => {
+const publish = (tag: string, dryRun = false): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    if (typeof tag !== 'string') {
+      // throw new Error(`tag must be 'string' not '${typeof tag}'`);
+      return reject(new Error(`tag must be 'string' not '${typeof tag}'`));
+    }
+
+    if (tag === '') {
+      return reject(new Error('tag must not be empty'));
+    }
+
+    if (typeof dryRun !== 'boolean') {
+      return reject(
+        new Error(`dryRun must be 'boolean' not '${typeof dryRun}'`),
+      );
+    }
+
+    spawn('npm', ['publish', '--tag', tag, ...(dryRun ? ['--dry-run'] : [])], {
+      stdio: ['ignore', 'inherit', 'inherit'],
+    }).on('exit', resolve);
+  });
+};
+
+const getPackageJson = (dir: string): Record<string, any> => {
   const path = join(dir, 'package.json');
 
   return JSON.parse(readFileSync(path, 'utf-8'));
@@ -77,4 +100,4 @@ const shouldPublish = (
   return localVersion !== registryVersion;
 };
 
-export { getPackageJson, getVersionInRegistry, shouldPublish };
+export { getPackageJson, getVersionInRegistry, publish, shouldPublish };

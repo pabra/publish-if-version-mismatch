@@ -1,9 +1,16 @@
 import { join } from 'path';
-import { getPackageJson, getVersionInRegistry, shouldPublish } from '../index';
+import {
+  getPackageJson,
+  getVersionInRegistry,
+  publish,
+  shouldPublish,
+} from '../index';
 
 describe('package.json', () => {
   test('get own by cwd', () =>
-    expect(getPackageJson().name).toBe('publish-if-version-mismatch'));
+    expect(getPackageJson(process.cwd()).name).toBe(
+      'publish-if-version-mismatch',
+    ));
 
   test('get own two up', () =>
     expect(getPackageJson(join(__dirname, '..', '..')).name).toBe(
@@ -107,4 +114,17 @@ describe('should publish', () => {
     expect(() => shouldPublish(1 as any, '1.0.0')).toThrowError());
   test('undefined local version', () =>
     expect(() => shouldPublish(undefined as any, '1.0.0')).toThrowError());
+});
+
+describe('publish', () => {
+  test('dry run', () => expect(publish('unitTest', true)).resolves.toBe(0));
+
+  test('number tag', () =>
+    expect(publish(1 as any, true)).rejects.toThrowError());
+  test('undefined tag', () =>
+    expect(publish(undefined as any, true)).rejects.toThrowError());
+  test('empty tag', () => expect(publish('', true)).rejects.toThrowError());
+
+  test('number readOnly', () =>
+    expect(publish('unitTest', 1 as any)).rejects.toThrowError());
 });
