@@ -102,6 +102,10 @@ const main = async () => {
 
     if (doPublish) {
       process.exitCode = await publish(tag, dryRun);
+    } else {
+      process.stdout.write(
+        `Will not try to publish local version '${version}' over version '${registryVersion}' in registry.\n`,
+      );
     }
   }
 };
