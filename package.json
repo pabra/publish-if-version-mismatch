@@ -1,6 +1,6 @@
 {
   "name": "publish-if-version-mismatch",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Use in CI/CD instead of 'npm publish' to only publish if version has changed and cause no error otherwise.",
   "bin": "dist/cjs/cli.js",
   "main": "dist/cjs/index.js",
