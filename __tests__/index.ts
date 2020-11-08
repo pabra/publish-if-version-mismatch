@@ -4,7 +4,7 @@ import {
   getVersionInRegistry,
   publish,
   shouldPublish,
-} from '../index';
+} from '../src/index';
 
 describe('package.json', () => {
   test('get own by cwd', () =>
@@ -12,8 +12,8 @@ describe('package.json', () => {
       'publish-if-version-mismatch',
     ));
 
-  test('get own two up', () =>
-    expect(getPackageJson(join(__dirname, '..', '..')).name).toBe(
+  test('get own from parent dir', () =>
+    expect(getPackageJson(join(__dirname, '..')).name).toBe(
       'publish-if-version-mismatch',
     ));
 
