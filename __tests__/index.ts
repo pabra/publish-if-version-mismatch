@@ -65,13 +65,13 @@ describe('version in registry', () => {
     expect(
       getVersionInRegistry(
         'publish-if-version-mismatch',
-        'thisTagDoesNotExist',
+        'this-tag-does-not-exist',
       ),
     ).toBe(''));
 
   test('nonexistent package', () =>
     expect(
-      getVersionInRegistry('@pabra/thisPackageDoesNotExist', 'latest'),
+      getVersionInRegistry('@pabra/this-package-does-not-exist', 'latest'),
     ).toBe(404));
 
   test('number package', () =>
