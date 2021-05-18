@@ -18,7 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        node: [10, 12, 14, 16]
+        # skip 16 as long as https://github.com/npm/cli/issues/2740 and https://github.com/npm/cli/issues/3075 are not fixed
+        node: [10, 12, 14]
 
     name: ${{ matrix.os }} Node ${{ matrix.node }} cache
 
