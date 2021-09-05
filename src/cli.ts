@@ -26,7 +26,7 @@ const getOwnPackageJson = () => {
   try {
     // while development, __filename is in src/ -> package.json must be one dir up
     return getPackageJson(join(__dirname, '..'));
-  } catch (err) {
+  } catch (err: any) {
     if (err.code !== 'ENOENT') {
       throw err;
     }
@@ -35,7 +35,7 @@ const getOwnPackageJson = () => {
   try {
     // after build, __filename is in dist/cjs/ -> package.json must be two dirs up
     return getPackageJson(join(__dirname, '..', '..'));
-  } catch (err) {
+  } catch (err: any) {
     if (err.code !== 'ENOENT') {
       throw err;
     }
