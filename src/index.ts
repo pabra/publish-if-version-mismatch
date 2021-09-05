@@ -38,6 +38,19 @@ const getVersionInRegistry = (
       return 404;
     }
 
+    // npm v7 (node v16) does not write the error object to stdout anymore
+    // instead it's mixed with plain text output on stderr
+    // https://github.com/npm/cli/issues/2740
+    if (child.status === 1 && typeof child.stderr === 'string') {
+      const maybeJson = child.stderr.match(/{([\s\S]+)}/);
+      if (maybeJson) {
+        const stderrJson = JSON.parse(maybeJson[0]);
+        if (stderrJson?.error?.code === 'E404') {
+          return 404;
+        }
+      }
+    }
+
     throw new Error(child.stderr);
   }
 
