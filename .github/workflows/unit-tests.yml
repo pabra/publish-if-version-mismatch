@@ -19,7 +19,7 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         # skip 16 as long as https://github.com/npm/cli/issues/2740 and https://github.com/npm/cli/issues/3075 are not fixed
-        node: [10, 12, 14]
+        node: [10, 12, 14, 16]
 
     name: ${{ matrix.os }} Node ${{ matrix.node }} cache
 
@@ -60,7 +60,7 @@ jobs:
         run: npm run test:after-commit
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           flags: unittests
           env_vars: OS,NODE
